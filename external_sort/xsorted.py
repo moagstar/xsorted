@@ -60,22 +60,23 @@ def xsorted(iterable, key=None, reverse=False):
     """
     with _temp_dir(temp_root) as temp_dir_path:
 
-        batches = []
+        paths = []
         for batch_id, batch in enumerate(partition_all(batch_size, iterable)):
             path = os.path.join(temp_dir_path, str(batch_id))
-            batches.append(path)
             with open(path, 'wb') as fileobj:
-                sorted_batch = sorted(batch, key, reverse)
+                sorted_batch = sorted(batch, key=key, reverse=reverse)
                 pickle.dump(sorted_batch, fileobj)
+            paths.append(path)
 
-        def load(batch_id):
-            path = os.path.join(temp_dir_path, str(batch_id))
-            with open(path) as fileobj:
-                for item in pickle.load(fileobj):
-                    yield item
-
-        items = (item for batch_id in batches for item in load(batch_id))
-        return heapq.merge(items, key, reverse)
+        if paths:
+            def load(path):
+                with open(path, 'rb') as fileobj:
+                    for item in pickle.load(fileobj):
+                        yield item
+            items = (item for path in paths for item in load(path))
+            return heapq.merge(items, key=key, reverse=reverse)
+        else:
+            return []
 
 
 @contextlib.contextmanager
