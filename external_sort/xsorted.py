@@ -21,7 +21,7 @@ from __future__ import division, print_function, absolute_import
 # std
 import os
 import sys
-import pickle
+from pickle import dump, load
 import argparse
 import logging
 import contextlib
@@ -42,29 +42,46 @@ __license__ = "none"
 _logger = logging.getLogger(__name__)
 
 
-batch_size = 8192
+batch_size = 4
 temp_root = None
 
 
 def _split(iterable, key, reverse, temp_dir_path):
+    """
+
+    :param iterable:
+    :param key:
+    :param reverse:
+    :param temp_dir_path:
+
+    :return:
+    """
     paths = []
     for batch_id, batch in enumerate(partition_all(batch_size, iterable)):
         path = os.path.join(temp_dir_path, str(batch_id))
         with open(path, 'wb') as fileobj:
             sorted_batch = sorted(batch, key=key, reverse=reverse)
-            pickle.dump(sorted_batch, fileobj)
+            dump(sorted_batch, fileobj)
         paths.append(path)
     return paths
 
 
 def _merge(paths, key, reverse):
+    """
+
+    :param paths:
+    :param key:
+    :param reverse:
+
+    :return:
+    """
     if paths:
-        def load(path):
+        def load_items(path):
             with open(path, 'rb') as fileobj:
-                for item in pickle.load(fileobj):
+                for item in load(fileobj):
                     yield item
-        items = (item for path in paths for item in load(path))
-        return heapq.merge(items, key=key, reverse=reverse)
+        items = (load_items(path) for path in paths)
+        return heapq.merge(*items, key=key, reverse=reverse)
     else:
         return []
 
@@ -95,7 +112,7 @@ def _temp_dir(temp_root):
     """
     temp_dir_path = tempfile.mkdtemp(dir=temp_root)
     try:
-        yield temp_dir_path
+        yield 'data'#temp_dir_path
     finally:
         shutil.rmtree(temp_dir_path, ignore_errors=True)
 
