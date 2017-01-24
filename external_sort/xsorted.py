@@ -46,9 +46,31 @@ batch_size = 8192
 temp_root = None
 
 
+def _split(iterable, key, reverse, temp_dir_path):
+    paths = []
+    for batch_id, batch in enumerate(partition_all(batch_size, iterable)):
+        path = os.path.join(temp_dir_path, str(batch_id))
+        with open(path, 'wb') as fileobj:
+            sorted_batch = sorted(batch, key=key, reverse=reverse)
+            pickle.dump(sorted_batch, fileobj)
+        paths.append(path)
+    return paths
+
+
+def _merge(paths, key, reverse):
+    if paths:
+        def load(path):
+            with open(path, 'rb') as fileobj:
+                for item in pickle.load(fileobj):
+                    yield item
+        items = (item for path in paths for item in load(path))
+        return heapq.merge(items, key=key, reverse=reverse)
+    else:
+        return []
+
+
 def xsorted(iterable, key=None, reverse=False):
     """
-
 
     :param iterable:
     :param key:
@@ -59,24 +81,8 @@ def xsorted(iterable, key=None, reverse=False):
     :return:
     """
     with _temp_dir(temp_root) as temp_dir_path:
-
-        paths = []
-        for batch_id, batch in enumerate(partition_all(batch_size, iterable)):
-            path = os.path.join(temp_dir_path, str(batch_id))
-            with open(path, 'wb') as fileobj:
-                sorted_batch = sorted(batch, key=key, reverse=reverse)
-                pickle.dump(sorted_batch, fileobj)
-            paths.append(path)
-
-        if paths:
-            def load(path):
-                with open(path, 'rb') as fileobj:
-                    for item in pickle.load(fileobj):
-                        yield item
-            items = (item for path in paths for item in load(path))
-            return heapq.merge(items, key=key, reverse=reverse)
-        else:
-            return []
+        paths = _split(iterable, key, reverse, temp_dir_path)
+        return _merge(paths, key, reverse)
 
 
 @contextlib.contextmanager
