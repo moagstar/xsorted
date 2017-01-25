@@ -9,7 +9,7 @@ import pytest
 from hypothesis import given, settings
 import hypothesis.strategies as st
 # local
-from xsorted.xsorted import xsorted
+from xsorted import xsorted
 
 
 @st.composite
