@@ -23,11 +23,9 @@ import sys
 import argparse
 import logging
 import contextlib
-import tempfile
-import shutil
 # local
 from external_sort import __version__
-from . _xsorted import _default_dump_load, _sort_batches, _merge_sort_batches
+from . _xsorted import DefaultSerializer, _sort_batches, _merge_sort_batches
 
 
 __author__ = "Daniel Bradburn"
@@ -42,13 +40,13 @@ class XSorter:
     """
     """
 
-    def __init__(self, batch_size=8192, dump_load=None):
+    def __init__(self, batch_size=8192, serializer=None):
         """
 
         :param batch_size:
-        :param dump_load:
+        :param serializer:
         """
-        self.dump_load = dump_load
+        self.serializer = serializer
         self.batch_size = batch_size
 
     def __call__(self, iterable, key=None, reverse=False):
@@ -60,28 +58,23 @@ class XSorter:
 
         :return:
         """
-        batch_ids = _sort_batches(self, iterable, key, reverse)
-        return _merge_sort_batches(self, batch_ids, key, reverse)
+        with self._enter():
+            batch_ids = _sort_batches(self.batch_size, self.serializer.dump, iterable, key, reverse)
+            return _merge_sort_batches(self.serializer.load, batch_ids, key, reverse)
+
+    @contextlib.contextmanager
+    def _enter(self):
+        """
+        """
+        # allow serializer to not be a context manager.
+        if hasattr(self.serializer, '__enter__'):
+            with self.serializer:
+                yield
+        else:
+            yield
 
 
-def xsorted(iterable, key=None, reverse=False):
-    with _default_dump_load() as dump_load:
-        return XSorter(dump_load=dump_load)(iterable, key=key, reverse=reverse)
-
-
-@contextlib.contextmanager
-def _temp_dir(temp_root):
-    """
-    Context manager which creates a temporary directory on enter, removing the tree on exit.
-
-    :param temp_root: Directory to create the temp directory under.
-
-    """
-    temp_dir_path = tempfile.mkdtemp(dir=temp_root)
-    try:
-        yield 'data'#temp_dir_path
-    finally:
-        shutil.rmtree(temp_dir_path, ignore_errors=True)
+xsorted = XSorter(serializer=DefaultSerializer())
 
 
 def parse_args(args):
