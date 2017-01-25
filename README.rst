@@ -1,19 +1,12 @@
-=============
+=======
 xsorted
-=============
+=======
 
+Like ``sorted`` but using external sorting so that large data sets can be sorted.
 
-Add a short description here!
+Usage
+-----
 
-
-Description
-===========
-
-A longer description of your project goes here...
-
-
-Note
-====
-
-This project has been set up using PyScaffold 2.5.7. For details and usage
-information on PyScaffold see http://pyscaffold.readthedocs.org/.
+>>> from xsorted import xsorted
+>>> ''.join(xsorted('qwertyuiopasdfghjklzxcvbnm'))
+'abcdefghijklmnopqrstuvwxyz'
