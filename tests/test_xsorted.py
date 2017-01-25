@@ -28,4 +28,3 @@ def test_property_xsorted_is_the_same_as_sorted(iterable):
     expected = list(sorted(list(iterable)))
     actual = list(xsorted(list(iterable)))
     assert actual == expected
-

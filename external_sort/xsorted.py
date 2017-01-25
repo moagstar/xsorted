@@ -19,19 +19,15 @@ Note: This skeleton file can be safely removed if not needed!
 # future
 from __future__ import division, print_function, absolute_import
 # std
-import os
 import sys
-from pickle import dump, load
 import argparse
 import logging
 import contextlib
 import tempfile
 import shutil
-import heapq
-# 3rd party
-from toolz.itertoolz import partition_all
 # local
 from external_sort import __version__
+from . _xsorted import _default_dump_load, _sort_batches, _merge_sort_batches
 
 
 __author__ = "Daniel Bradburn"
@@ -42,64 +38,35 @@ __license__ = "none"
 _logger = logging.getLogger(__name__)
 
 
-batch_size = 4
-temp_root = None
-
-
-def _split(iterable, key, reverse, temp_dir_path):
+class XSorter:
+    """
     """
 
-    :param iterable:
-    :param key:
-    :param reverse:
-    :param temp_dir_path:
+    def __init__(self, batch_size=8192, dump_load=None):
+        """
 
-    :return:
-    """
-    paths = []
-    for batch_id, batch in enumerate(partition_all(batch_size, iterable)):
-        path = os.path.join(temp_dir_path, str(batch_id))
-        with open(path, 'wb') as fileobj:
-            sorted_batch = sorted(batch, key=key, reverse=reverse)
-            dump(sorted_batch, fileobj)
-        paths.append(path)
-    return paths
+        :param batch_size:
+        :param dump_load:
+        """
+        self.dump_load = dump_load
+        self.batch_size = batch_size
 
+    def __call__(self, iterable, key=None, reverse=False):
+        """
 
-def _merge(paths, key, reverse):
-    """
+        :param iterable:
+        :param key:
+        :param reverse:
 
-    :param paths:
-    :param key:
-    :param reverse:
-
-    :return:
-    """
-    if paths:
-        def load_items(path):
-            with open(path, 'rb') as fileobj:
-                for item in load(fileobj):
-                    yield item
-        items = (load_items(path) for path in paths)
-        return heapq.merge(*items, key=key, reverse=reverse)
-    else:
-        return []
+        :return:
+        """
+        batch_ids = _sort_batches(self, iterable, key, reverse)
+        return _merge_sort_batches(self, batch_ids, key, reverse)
 
 
 def xsorted(iterable, key=None, reverse=False):
-    """
-
-    :param iterable:
-    :param key:
-    :param reverse:
-    :param batch_size:
-    :param temp_root:
-
-    :return:
-    """
-    with _temp_dir(temp_root) as temp_dir_path:
-        paths = _split(iterable, key, reverse, temp_dir_path)
-        return _merge(paths, key, reverse)
+    with _default_dump_load() as dump_load:
+        return XSorter(dump_load=dump_load)(iterable, key=key, reverse=reverse)
 
 
 @contextlib.contextmanager
