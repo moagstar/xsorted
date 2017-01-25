@@ -1,8 +1,8 @@
 =============
-external_sort
+xsorted
 =============
 
-This is the documentation of **external_sort**.
+This is the documentation of **xsorted**.
 
 .. note::
 

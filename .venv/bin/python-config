@@ -1,4 +1,4 @@
-#!/home/moagstar/Projects/external_sort/.venv/bin/python
+#!/home/moagstar/Projects/xsorted/.venv/bin/python
 
 import sys
 import getopt

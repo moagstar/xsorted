@@ -1,3 +1,7 @@
+"""
+_xsorted.py -- implementation details for xsorted
+"""
+
 # future
 from __future__ import division, print_function, absolute_import
 # std

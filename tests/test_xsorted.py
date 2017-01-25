@@ -9,7 +9,7 @@ import pytest
 from hypothesis import given, settings
 import hypothesis.strategies as st
 # local
-from external_sort.xsorted import xsorted
+from xsorted.xsorted import xsorted
 
 
 @st.composite
@@ -24,7 +24,6 @@ def lists_of_things(draw):
 
 
 @given(lists_of_things())
-@settings(max_examples=500)
 def test_property_xsorted_is_the_same_as_sorted(iterable):
     """
     Verify the property that given a list of things, when the list of things is sorted using
