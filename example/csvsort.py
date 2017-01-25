@@ -6,7 +6,6 @@ example showing how xsorted can be used to sort csv files.
 import os
 import sys
 import csv
-import random
 # local
 from xsorted import xsorted
 
