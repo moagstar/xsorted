@@ -7,3 +7,4 @@ pytest-benchmark[histogram]
 sphinx_rtd_theme
 sphinx
 hypothesis
+mock

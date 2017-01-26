@@ -4,10 +4,9 @@
 
 # std
 import os
-import random
-from unittest.mock import patch, Mock
 # 3rd party
 import pytest
+from mock import patch, Mock
 from hypothesis import given, settings
 import hypothesis.strategies as st
 # local
