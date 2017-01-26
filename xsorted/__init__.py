@@ -6,8 +6,8 @@ from __future__ import division, print_function, absolute_import
 import pkg_resources
 try:
     __version__ = pkg_resources.get_distribution(__name__).version
-except:
-    __version__ = 'unknown'
+except:                         # pragma: no cover
+    __version__ = 'unknown'     # pragma: no cover
 import os
 import pickle as serializer
 import tempfile
@@ -22,12 +22,50 @@ __copyright__ = "Daniel Bradburn"
 __license__ = "MIT"
 
 
+def _default_sort_batches(batch_size, dump, iterable, key=None, reverse=False):
+    """
+
+    :param batch_size:
+    :param dump:
+    :param iterable:
+    :param key:
+    :param reverse:
+
+    :return:
+    """
+    batch_ids = []
+    for batch in partition_all(batch_size, iterable):
+        sorted_batch = sorted(batch, key=key, reverse=reverse)
+        batch_id = dump(sorted_batch)
+        batch_ids.append(batch_id)
+    return batch_ids
+
+
+def _default_merge_sort_batches(load, batch_ids, key, reverse):
+    """
+
+    :param load:
+    :param batch_ids:
+    :param key:
+    :param reverse:
+
+    :return:
+    """
+    if batch_ids:
+        items = map(load, batch_ids)
+        return heapq.merge(*items, key=key, reverse=reverse)
+    else:
+        return []
+
+
 class XSorter:
     """
     Create an xsorted function which uses a custom serializer or batch size.
     """
 
-    def __init__(self, batch_size=8192, serializer=None):
+    def __init__(self, batch_size=8192, serializer=None,
+                 sort_batches=_default_sort_batches,
+                 merge_sort_batches=_default_merge_sort_batches):
         """
         Initialise an xsorted function.
 
@@ -42,9 +80,12 @@ class XSorter:
 
         :param batch_size: The number of items to sort in each batch.
         :param serializer: Custom serializer object.
+        :param sort_batches: Callable which will sort batches individually.
+        :param merge_sort_batches: Callable which will merge sort individually sorted batches.
         """
-        self.batch_size = batch_size
         self.serializer = serializer
+        self.sort_batches = lambda *args: sort_batches(batch_size, serializer.dump, *args)
+        self.merge_sort_batches = lambda *args: merge_sort_batches(serializer.load, *args)
 
     def __call__(self, iterable, key=None, reverse=False):
         """
@@ -65,8 +106,8 @@ class XSorter:
         :return: an iterable which returns the elements of the input iterable in sorted order.
         """
         with self._enter():
-            batch_ids = _sort_batches(self.batch_size, self.serializer.dump, iterable, key, reverse)
-            return _merge_sort_batches(self.serializer.load, batch_ids, key, reverse)
+            batch_ids = self.sort_batches(iterable, key, reverse)
+            return self.merge_sort_batches(batch_ids, key, reverse)
 
     @contextlib.contextmanager
     def _enter(self):
@@ -85,7 +126,6 @@ class DefaultSerializer():
     """
     Default serializer which uses temp files to store sorted batches.
     """
-
     def __init__(self):
         self.batch_ids = []
 
@@ -145,39 +185,3 @@ def xsorted(iterable, key=None, reverse=False):
     :return: an iterable which returns the elements of the input iterable in sorted order.
     """
     return _xsorted(iterable, key, reverse)
-
-
-def _sort_batches(batch_size, dump, iterable, key, reverse):
-    """
-
-    :param batch_size:
-    :param dump:
-    :param iterable:
-    :param key:
-    :param reverse:
-
-    :return:
-    """
-    batch_ids = []
-    for batch in partition_all(batch_size, iterable):
-        sorted_batch = sorted(batch, key=key, reverse=reverse)
-        batch_id = dump(sorted_batch)
-        batch_ids.append(batch_id)
-    return batch_ids
-
-
-def _merge_sort_batches(load, batch_ids, key, reverse):
-    """
-
-    :param load:
-    :param batch_ids:
-    :param key:
-    :param reverse:
-
-    :return:
-    """
-    if batch_ids:
-        items = map(load, batch_ids)
-        return heapq.merge(*items, key=key, reverse=reverse)
-    else:
-        return []

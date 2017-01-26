@@ -4,13 +4,13 @@
 
 # std
 import os
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 # 3rd party
 import pytest
 from hypothesis import given, settings
 import hypothesis.strategies as st
 # local
-from xsorted import xsorted
+from xsorted import xsorted, _default_sort_batches, _default_merge_sort_batches
 from fixtures import (
     default_serializer_fixture,
     xsorted_custom_serializer_fixture,
@@ -29,7 +29,7 @@ def lists_of_things(draw):
     return draw(st.lists(item_strategy))
 
 
-def assert_property_xsorted_is_the_same_as_sorted(_xsorted, things):
+def assert_property_xsorted_is_the_same_as_sorted(_xsorted, things, reverse):
     """
     Verify the property that given a list of things, when the list of things is sorted using
     ``xsorted``, the result should be the same as when the list of things is sorted using the
@@ -37,17 +37,17 @@ def assert_property_xsorted_is_the_same_as_sorted(_xsorted, things):
 
     :param iterable: Iterable containing the list of things to sort.
     """
-    expected = list(sorted(things))
-    actual = list(_xsorted(things))
+    expected = list(sorted(things, reverse=reverse))
+    actual = list(_xsorted(things, reverse=reverse))
     assert actual == expected
 
 
-@given(lists_of_things())
-def test_property_xsorted_is_the_same_as_sorted(things):
+@given(things=lists_of_things(), reverse=st.booleans())
+def test_property_xsorted_is_the_same_as_sorted(things, reverse):
     """
     Verify that the default xsorted sorts as expected.
     """
-    assert_property_xsorted_is_the_same_as_sorted(xsorted, things)
+    assert_property_xsorted_is_the_same_as_sorted(xsorted, things, reverse)
 
 
 @given(things=lists_of_things())
@@ -71,30 +71,33 @@ def test_default_serializer_cleanup(default_serializer_fixture):
     assert not os.path.exists(path)
 
 
-@given(things=lists_of_things())
-def test_custom_serializer(xsorted_custom_serializer_fixture, things):
+@given(things=lists_of_things(), reverse=st.booleans())
+def test_custom_serializer(xsorted_custom_serializer_fixture, things, reverse):
     """
     Verify that we can use a custom serializer that is a context manager.
     """
-    assert_property_xsorted_is_the_same_as_sorted(xsorted_custom_serializer_fixture, things)
+    assert_property_xsorted_is_the_same_as_sorted(xsorted_custom_serializer_fixture, things, reverse)
 
 
-@given(things=lists_of_things())
-def test_custom_serializer_context_manager(xsorted_custom_serializer_context_manager_fixture, things):
+@given(things=lists_of_things(), reverse=st.booleans())
+def test_custom_serializer_context_manager(xsorted_custom_serializer_context_manager_fixture, things, reverse):
     """
     Verify that we can use a custom serializer that is not a context manager.
     """
-    assert_property_xsorted_is_the_same_as_sorted(xsorted_custom_serializer_context_manager_fixture, things)
+    assert_property_xsorted_is_the_same_as_sorted(xsorted_custom_serializer_context_manager_fixture, things, reverse)
     assert xsorted_custom_serializer_context_manager_fixture.serializer.enter_called
     assert xsorted_custom_serializer_context_manager_fixture.serializer.exit_called
 
 
-@pytest.mark.xfail()
-def test_sort_batches():
+def test_default_sort_batches():
     """
     Verify that sort_batches splits the iterable into sorted batches.
     """
-    assert 0, 'not implemented'
+    dump = Mock()
+    range_size, batch_size = 17, 4
+    _default_sort_batches(batch_size=batch_size, dump=dump, iterable=range(range_size))
+    expected = (range_size // batch_size) + int(bool(range_size % batch_size))
+    assert dump.call_count == expected
 
 
 @pytest.mark.xfail()
