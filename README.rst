@@ -1,3 +1,7 @@
+
+.. image:: https://travis-ci.org/moagstar/xsorted.svg?branch=master
+    :target: https://travis-ci.org/moagstar/xsorted
+
 =======
 xsorted
 =======
