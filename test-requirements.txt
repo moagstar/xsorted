@@ -3,7 +3,6 @@ pytest
 pygal==2.0
 pygaljs==1.0.1
 pytest-benchmark
-pytest-benchmark[histogram]
 sphinx_rtd_theme
 sphinx
 hypothesis
