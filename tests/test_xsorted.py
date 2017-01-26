@@ -19,17 +19,6 @@ from fixtures import (
 )
 
 
-@st.composite
-def lists_of_things(draw):
-    item_strategy = draw(st.sampled_from((
-        st.integers(),
-        st.fractions(),
-        st.text(),
-        st.lists(st.text())
-    )))
-    return draw(st.lists(item_strategy))
-
-
 def assert_property_xsorted_is_the_same_as_sorted(_xsorted, things, reverse):
     """
     Verify the property that given a list of things, when the list of things is sorted using
@@ -43,7 +32,7 @@ def assert_property_xsorted_is_the_same_as_sorted(_xsorted, things, reverse):
     assert actual == expected
 
 
-@given(things=lists_of_things(), reverse=st.booleans())
+@given(things=st.lists(st.integers()), reverse=st.booleans())
 def test_property_xsorted_is_the_same_as_sorted(things, reverse):
     """
     Verify that the default xsorted sorts as expected.
@@ -51,7 +40,7 @@ def test_property_xsorted_is_the_same_as_sorted(things, reverse):
     assert_property_xsorted_is_the_same_as_sorted(xsorted, things, reverse)
 
 
-@given(things=lists_of_things())
+@given(things=st.lists(st.integers()))
 def test_default_serializer_dump_load(default_serializer_fixture, things):
     """
     Verify that the default serializer loads as expected.
@@ -72,7 +61,7 @@ def test_default_serializer_cleanup(default_serializer_fixture):
     assert not os.path.exists(path)
 
 
-@given(things=lists_of_things(), reverse=st.booleans())
+@given(things=st.lists(st.integers()), reverse=st.booleans())
 def test_custom_serializer(xsorted_custom_serializer_fixture, things, reverse):
     """
     Verify that we can use a custom serializer that is a context manager.
@@ -80,7 +69,7 @@ def test_custom_serializer(xsorted_custom_serializer_fixture, things, reverse):
     assert_property_xsorted_is_the_same_as_sorted(xsorted_custom_serializer_fixture, things, reverse)
 
 
-@given(things=lists_of_things(), reverse=st.booleans())
+@given(things=st.lists(st.integers()), reverse=st.booleans())
 def test_custom_serializer_context_manager(xsorted_custom_serializer_context_manager_fixture, things, reverse):
     """
     Verify that we can use a custom serializer that is not a context manager.
