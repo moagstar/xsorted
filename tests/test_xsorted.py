@@ -4,6 +4,7 @@
 
 # std
 import os
+import random
 from unittest.mock import patch, Mock
 # 3rd party
 import pytest
@@ -15,6 +16,7 @@ from fixtures import (
     default_serializer_fixture,
     xsorted_custom_serializer_fixture,
     xsorted_custom_serializer_context_manager_fixture,
+    benchmark_items,
 )
 
 
@@ -106,3 +108,11 @@ def test_merge_sort_batches():
     Verify that merge_sort_batches merges batches into one sorted iterable.
     """
     assert 0, 'not implemented'
+
+
+def test_benchmark_xsorted(benchmark, benchmark_items):
+    benchmark(lambda: xsorted(benchmark_items))
+
+
+def test_benchmark_sorted(benchmark, benchmark_items):
+    benchmark(lambda: sorted(benchmark_items))

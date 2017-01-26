@@ -1,5 +1,6 @@
 # std
 import uuid
+import random
 # 3rd party
 import pytest
 # local
@@ -61,3 +62,14 @@ def xsorted_custom_serializer_context_manager_fixture():
     as serializer.
     """
     return XSorter(serializer=CustomSerializerContextManager())
+
+
+@pytest.fixture()
+def benchmark_items():
+    """
+    Fixture for creating a list of items for sorting which can be used for benchmarking.
+    """
+    items = list(range(pow(10, 6)))
+    random.seed(0)
+    random.shuffle(items)
+    return items
