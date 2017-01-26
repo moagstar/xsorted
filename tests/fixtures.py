@@ -15,7 +15,7 @@ def default_serializer_fixture():
     return DefaultSerializer()
 
 
-class CustomSerializer:
+class CustomSerializer(object):
     """
     Custom serializer using an in-memory store.
     """
