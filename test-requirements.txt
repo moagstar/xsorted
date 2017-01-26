@@ -3,3 +3,4 @@ pytest
 pytest-benchmark
 sphinx_rtd_theme
 sphinx
+hypothesis
