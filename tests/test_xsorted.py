@@ -10,11 +10,11 @@ from mock import patch, Mock
 from hypothesis import given, settings
 import hypothesis.strategies as st
 # local
-from xsorted import xsorted, _default_sort_batches, _default_merge_sort_batches
+from xsorted import xsorted, _split, _merge
 from fixtures import (
-    default_serializer_fixture,
+    serializer_fixture,
+    serializer_yield_fixture,
     xsorted_custom_serializer_fixture,
-    xsorted_custom_serializer_context_manager_fixture,
     benchmark_items,
 )
 
@@ -41,57 +41,51 @@ def test_property_xsorted_is_the_same_as_sorted(things, reverse):
 
 
 @given(things=st.lists(st.integers()))
-def test_default_serializer_dump_load(default_serializer_fixture, things):
+def test_serializer_dump_load(serializer_yield_fixture, things):
     """
     Verify that the default serializer loads as expected.
     """
-    with default_serializer_fixture:
-        ids = [default_serializer_fixture.dump(thing) for thing in things]
-        actual = [default_serializer_fixture.load(id) for id in ids]
-        assert things == actual
+    dump, load = serializer_yield_fixture
+    ids = [dump(thing) for thing in things]
+    actual = [load(id) for id in ids]
+    assert things == actual
 
 
-def test_default_serializer_cleanup(default_serializer_fixture):
+def test_default_serializer_cleanup(serializer_fixture):
     """
     Verify that the default serializer cleans up after itself.
     """
-    with default_serializer_fixture:
-        path = default_serializer_fixture.dump(0)
+    with serializer_fixture as (dump, load):
+        path = dump(0)
         assert os.path.exists(path)
     assert not os.path.exists(path)
 
 
 @given(things=st.lists(st.integers()), reverse=st.booleans())
-def test_custom_serializer(xsorted_custom_serializer_fixture, things, reverse):
+def test_custom_serializer_context_manager(xsorted_custom_serializer_fixture, things, reverse):
     """
-    Verify that we can use a custom serializer that is a context manager.
+    Verify that we can use a custom serializer that is not a context manager.
     """
     assert_property_xsorted_is_the_same_as_sorted(xsorted_custom_serializer_fixture, things, reverse)
 
 
-@given(things=st.lists(st.integers()), reverse=st.booleans())
-def test_custom_serializer_context_manager(xsorted_custom_serializer_context_manager_fixture, things, reverse):
-    """
-    Verify that we can use a custom serializer that is not a context manager.
-    """
-    assert_property_xsorted_is_the_same_as_sorted(xsorted_custom_serializer_context_manager_fixture, things, reverse)
-    assert xsorted_custom_serializer_context_manager_fixture.serializer.enter_called
-    assert xsorted_custom_serializer_context_manager_fixture.serializer.exit_called
-
-
-def test_default_sort_batches():
+def test_split():
     """
     Verify that sort_batches splits the iterable into sorted batches.
     """
     dump = Mock()
-    range_size, batch_size = 17, 4
-    _default_sort_batches(batch_size=batch_size, dump=dump, iterable=range(range_size))
-    expected = (range_size // batch_size) + int(bool(range_size % batch_size))
-    assert dump.call_count == expected
+
+    range_size, partition_size = 17, 4
+    iterable = list(range(range_size))
+
+    list(_split(partition_size=partition_size, dump=dump, iterable=iterable))
+    expected_call_count = (range_size // partition_size) + int(bool(range_size % partition_size))
+
+    assert dump.call_count == expected_call_count
 
 
 @pytest.mark.xfail()
-def test_merge_sort_batches():
+def test_merge():
     """
     Verify that merge_sort_batches merges batches into one sorted iterable.
     """
@@ -99,8 +93,14 @@ def test_merge_sort_batches():
 
 
 def test_benchmark_xsorted(benchmark, benchmark_items):
+    """
+    Benchmark the performance of the ``xsorted`` function.
+    """
     benchmark(lambda: xsorted(benchmark_items))
 
 
 def test_benchmark_sorted(benchmark, benchmark_items):
+    """
+    Benchmark the performance of the built-in ``sorted`` function for comparing with ``xsorted``.
+    """
     benchmark(lambda: sorted(benchmark_items))
