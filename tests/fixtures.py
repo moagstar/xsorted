@@ -57,16 +57,7 @@ def xsorted_custom_serializer_fixture():
 
 
 @pytest.fixture()
-def xsorted_custom_serializer_context_manager_fixture():
-    """
-    Fixture for creating an xsorted function with an instance of CustomSerializerContextManager
-    as serializer.
-    """
-    return xsorter(serializer_factory=CustomSerializerContextManager)
-
-
-@pytest.fixture()
-def benchmark_items():
+def benchmark_items_fixture():
     """
     Fixture for creating a list of items for sorting which can be used for benchmarking.
     """

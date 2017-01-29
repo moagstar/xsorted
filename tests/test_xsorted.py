@@ -4,18 +4,19 @@
 
 # std
 import os
+import random
 # 3rd party
-import pytest
-from mock import patch, Mock
-from hypothesis import given, settings
+from mock import Mock, MagicMock
+from hypothesis import given
 import hypothesis.strategies as st
+from toolz.itertoolz import partition_all
 # local
 from xsorted import xsorted, _split, _merge
 from fixtures import (
     serializer_fixture,
     serializer_yield_fixture,
     xsorted_custom_serializer_fixture,
-    benchmark_items,
+    benchmark_items_fixture,
 )
 
 
@@ -84,23 +85,31 @@ def test_split():
     assert dump.call_count == expected_call_count
 
 
-@pytest.mark.xfail()
-def test_merge():
+@given(
+    partition_size=st.integers(min_value=1, max_value=100),
+    num_items=st.integers(min_value=0, max_value=100),
+)
+def test_merge(partition_size, num_items):
     """
     Verify that merge_sort_batches merges batches into one sorted iterable.
     """
-    assert 0, 'not implemented'
+    items = range(num_items)
+    partitions = list(partition_all(partition_size, items))
+    partition_ids = range(len(partitions))
+    random.shuffle(partitions)
+    merged = _merge(lambda x: partitions[x], partition_ids)
+    assert list(merged) == list(items)
 
 
-def test_benchmark_xsorted(benchmark, benchmark_items):
+def test_benchmark_xsorted(benchmark, benchmark_items_fixture):
     """
     Benchmark the performance of the ``xsorted`` function.
     """
-    benchmark(lambda: xsorted(benchmark_items))
+    benchmark(lambda: xsorted(benchmark_items_fixture))
 
 
-def test_benchmark_sorted(benchmark, benchmark_items):
+def test_benchmark_sorted(benchmark, benchmark_items_fixture):
     """
     Benchmark the performance of the built-in ``sorted`` function for comparing with ``xsorted``.
     """
-    benchmark(lambda: sorted(benchmark_items))
+    benchmark(lambda: sorted(benchmark_items_fixture))

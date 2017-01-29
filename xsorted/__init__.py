@@ -9,20 +9,21 @@ try:
 except:                         # pragma: no cover
     __version__ = 'unknown'     # pragma: no cover
 import os
-import functools
 import pickle
 import tempfile
-import heapq
-import contextlib
+from heapq import merge
+from contextlib import contextmanager
+from functools import partial
 # 3rd party
-from toolz import functoolz, itertoolz
+from toolz.functoolz import compose
+from toolz.itertoolz import partition_all
 
 
 __author__ = __copyright__ = "Daniel Bradburn"
 __license__ = "MIT"
 
 
-@contextlib.contextmanager
+@contextmanager
 def serializer():
     """
     Default serializer factory which uses pickle to serialize partitions
@@ -72,11 +73,10 @@ def _split(dump, partition_size, iterable, key=None, reverse=False):
 
     :return: iterable of the ids which can be used to reload the externalized partitions.
     """
-    dump_sorted = functoolz.compose(dump, sorted)
-    return (
-        dump_sorted(partition, key=key, reverse=reverse)
-        for partition in itertoolz.partition_all(partition_size, iterable)
-    )
+    sorted_bound = partial(sorted, key=key, reverse=reverse)
+    partitioned = partition_all(partition_size, iterable)
+    dump_sorted = compose(dump, sorted_bound)
+    return map(dump_sorted, partitioned)
 
 
 def _merge(load, partition_ids, key=None, reverse=False):
@@ -91,7 +91,7 @@ def _merge(load, partition_ids, key=None, reverse=False):
 
     :return: iterable of merged partitions.
     """
-    return heapq.merge(*map(load, partition_ids), key=key, reverse=reverse)
+    return merge(*map(load, partition_ids), key=key, reverse=reverse)
 
 
 def _xsorted(partition_size, serializer_factory, split, merge, iterable, key=None, reverse=False):
@@ -148,7 +148,7 @@ def xsorter(partition_size=8192, serializer_factory=serializer, split=_split, me
 
     :return: xsorted function.
     """
-    return functools.partial(_xsorted, partition_size, serializer_factory, split, merge)
+    return partial(_xsorted, partition_size, serializer_factory, split, merge)
 
 
 def xsorted(iterable, key=None, reverse=False):
