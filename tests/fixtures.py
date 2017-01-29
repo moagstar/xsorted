@@ -1,8 +1,6 @@
 # std
 import uuid
 import random
-# compat
-import mock
 # 3rd party
 import pytest
 # local
