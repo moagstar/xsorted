@@ -17,6 +17,7 @@ addons:
       - python-pip
 install:
   - pip install -r requirements.txt -r test-requirements.txt
+  - pip install coveralls
   - python setup.py develop
 before_script:
   - git config --global user.email "moagstar@gmail.com"
@@ -24,6 +25,6 @@ before_script:
 script:
   - py.test --benchmark-skip
 after_success:
-  - if [[ "$COVERAGE" == "true" ]]; then coveralls || echo "failed"; fi
+  - coveralls
 cache:
   - apt
