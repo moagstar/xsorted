@@ -23,7 +23,7 @@ before_script:
   - git config --global user.email "moagstar@gmail.com"
   - git config --global user.name "Daniel Bradburn"
 script:
-  - py.test --benchmark-skip
+  coverage run --source=yourpackagename setup.py test
 after_success:
   - coveralls
 cache:
