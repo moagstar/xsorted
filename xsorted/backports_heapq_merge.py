@@ -56,7 +56,7 @@ Agreement.
 from heapq import _heapify_max, _heappop_max, _heapreplace_max, heapify, heappop, heapreplace
 
 
-def merge(*iterables, key=None, reverse=False):
+def merge(*iterables, **kwargs):
     '''Merge multiple sorted inputs into a single sorted output.
 
     Similar to sorted(itertools.chain(*iterables)) but returns a generator,
@@ -73,6 +73,9 @@ def merge(*iterables, key=None, reverse=False):
     ['dog', 'cat', 'fish', 'horse', 'kangaroo']
 
     '''
+
+    key = kwargs.get('key', None)
+    reverse = kwargs.get('reverse', False)
 
     h = []
     h_append = h.append
