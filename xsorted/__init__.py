@@ -11,9 +11,10 @@ except:                         # pragma: no cover
 import os
 import pickle
 import tempfile
-from heapq import merge
 from contextlib import contextmanager
 from functools import partial
+# compat
+from xsorted.backports_heapq_merge import merge
 # 3rd party
 from toolz.functoolz import compose
 from toolz.itertoolz import partition_all
