@@ -17,13 +17,13 @@ addons:
       - python-pip
 install:
   - pip install -r requirements.txt -r test-requirements.txt
-  - pip install coveralls
+  - pip install python-coveralls
   - python setup.py develop
 before_script:
   - git config --global user.email "moagstar@gmail.com"
   - git config --global user.name "Daniel Bradburn"
 script:
-  coverage run --source=xsorted setup.py test
+  - py.test -v --cov coveralls --cov-report term-missing
 after_success:
   - coveralls
 cache:
