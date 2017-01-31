@@ -13,9 +13,7 @@ def _iterables(iterables, random, reverse, key):
 
 def _expected(iterables, reverse, key):
     flattened = (y for x in iterables for y in x)
-    expected = list(sorted(flattened, key=key))
-    if reverse:
-        expected = list(reversed(expected))
+    expected = list(sorted(flattened, key=key, reverse=reverse))
     return expected
 
 
