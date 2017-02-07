@@ -6,18 +6,13 @@
 import os
 import random
 # 3rd party
-from mock import Mock, MagicMock
-from hypothesis import given
-import hypothesis.strategies as st
+import pytest
+from mock import Mock
+from hypothesis import given, example, strategies as st
 from toolz.itertoolz import partition_all
 # local
-from xsorted import xsorted, _split, _merge
-from fixtures import (
-    serializer_fixture,
-    serializer_yield_fixture,
-    xsorted_custom_serializer_fixture,
-    benchmark_items_fixture,
-)
+from xsorted import xsorted, _split, _merge, _dump, _load
+from . fixtures import xsorted_custom_serializer_fixture, benchmark_items_fixture
 
 
 def assert_property_xsorted_is_the_same_as_sorted(_xsorted, things, reverse):
@@ -34,45 +29,78 @@ def assert_property_xsorted_is_the_same_as_sorted(_xsorted, things, reverse):
 
 
 @given(things=st.lists(st.integers()), reverse=st.booleans())
+@example(things=[0, 0], reverse=True)
 def test_property_xsorted_is_the_same_as_sorted(things, reverse):
     """
-    Verify that the default xsorted sorts as expected.
+    Verify the property that xsorted == sorted.
     """
     assert_property_xsorted_is_the_same_as_sorted(xsorted, things, reverse)
 
 
-@given(things=st.lists(st.integers()))
-def test_serializer_dump_load(serializer_yield_fixture, things):
+@given(lists_of_things=st.lists(st.lists(st.integers())))
+def test_serializer_dump_load(lists_of_things):
     """
     Verify that the default serializer loads as expected.
     """
-    dump, load = serializer_yield_fixture
-    ids = [dump(thing) for thing in things]
-    actual = [load(id) for id in ids]
-    assert things == actual
+    ids = [_dump(thing) for thing in lists_of_things]
+    actual = [list(_load(id)) for id in ids]
+    assert lists_of_things == actual
 
 
-def test_default_serializer_cleanup(serializer_fixture):
+def test_default_serializer_cleanup():
     """
     Verify that the default serializer cleans up after itself.
     """
-    with serializer_fixture as (dump, load):
-        path = dump(0)
-        assert os.path.exists(path)
+    path = _dump([0])
+    assert os.path.exists(path)
+    list(_load(path))
     assert not os.path.exists(path)
 
 
 @given(things=st.lists(st.integers()), reverse=st.booleans())
-def test_custom_serializer_context_manager(xsorted_custom_serializer_fixture, things, reverse):
+def test_property_xsorted_custom_serializer_is_the_same_as_sorted(xsorted_custom_serializer_fixture,
+                                                                  things, reverse):
     """
-    Verify that we can use a custom serializer that is not a context manager.
+    Verify that we can supply custom serialization dump and load.
     """
     assert_property_xsorted_is_the_same_as_sorted(xsorted_custom_serializer_fixture, things, reverse)
 
 
+@pytest.mark.xfail()
+def test_property_xsorted_custom_merge_is_the_same_as_sorted():
+    """
+    Verify that we can supply custom merge function.
+    """
+    assert 0, 'not implemented'
+
+
+@pytest.mark.xfail()
+def test_property_xsorted_custom_split_is_the_same_as_sorted():
+    """
+    Verify that we can supply custom split function.
+    """
+    assert 0, 'not implemented'
+
+
+@pytest.mark.xfail()
+def test_property_xsorted_combined_custom_impl_is_the_same_as_sorted():
+    """
+    Verify the combination of custom implementation details.
+    """
+    assert 0, 'not implemented'
+
+
+@pytest.mark.xfail()
+def test_is_external():
+    """
+    Verify that when sorting a large iterable that not all items are loaded in memory.
+    """
+    assert 0, 'not implemented'
+
+
 def test_split():
     """
-    Verify that sort_batches splits the iterable into sorted batches.
+    Verify that the default _split correctly splits the iterable into sorted batches.
     """
     dump = Mock()
 
@@ -91,7 +119,7 @@ def test_split():
 )
 def test_merge(partition_size, num_items):
     """
-    Verify that merge_sort_batches merges batches into one sorted iterable.
+    Verify that _merge correctly merges batches into one sorted iterable.
     """
     items = range(num_items)
     partitions = list(partition_all(partition_size, items))

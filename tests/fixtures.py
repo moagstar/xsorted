@@ -4,38 +4,15 @@ import random
 # 3rd party
 import pytest
 # local
-from xsorted import serializer, xsorter
-
-
-@pytest.fixture()
-def serializer_fixture():
-    """
-    Default serializer fixture, the serializer is not entered via ``with``.
-    """
-    return serializer()
-
-
-@pytest.yield_fixture()
-def serializer_yield_fixture():
-    """
-    Default serializer fixture, the serializer is already entered via ``with``.
-    """
-    with serializer() as (dump, load):
-        yield dump, load
+from xsorted import xsorter
 
 
 class CustomSerializer:
     """
-    Custom serializer using an in-memory store.
+    Custom serializer using a simple in-memory dict.
     """
     def __init__(self):
         self.store = {}
-
-    def __enter__(self):
-        return self.dump, self.load
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        pass
 
     def dump(self, thing):
         object_id = uuid.uuid4()
@@ -51,7 +28,8 @@ def xsorted_custom_serializer_fixture():
     """
     Fixture for creating an xsorted function with an instance of CustomSerializer as serializer.
     """
-    return xsorter(serializer_factory=CustomSerializer)
+    serializer = CustomSerializer()
+    return xsorter(dump=serializer.dump, load=serializer.load)
 
 
 @pytest.fixture()
