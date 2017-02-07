@@ -61,8 +61,11 @@ def _load(partition_id):
     if os.path.exists(partition_id):
         try:
             with open(partition_id, 'rb') as fileobj:
-                while fileobj.peek(1):
-                    yield pickle.load(fileobj)
+                while True:
+                    try:
+                        yield pickle.load(fileobj)
+                    except EOFError:
+                        break
         finally:
             os.unlink(partition_id)
     else:
