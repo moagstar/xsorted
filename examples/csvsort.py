@@ -2,23 +2,13 @@
 example showing how xsorted can be used to sort csv files.
 """
 
-# std
-import os
-import sys
-import csv
-# local
-from xsorted import xsorted
+import sys, csv, xsorted
 
 
-if __name__ == '__main__':
-
-    input_path = os.path.join(os.path.dirname(__file__), 'bnc-wordfreq.csv')
-    with open(input_path) as fileobj:
-
-        reader = csv.DictReader(fileobj)
-        items = xsorted(reader, key=lambda item: int(item['FREQUENCY']))
-
-        writer = csv.DictWriter(sys.stdout, reader.fieldnames)
-        writer.writeheader()
-        for item in items:
-            writer.writerow(item)
+with open('bnc-wordfreq.csv') as fileobj:
+    reader = csv.DictReader(fileobj)
+    items = xsorted.xsorted(reader, key=lambda x: int(x['FREQUENCY']))
+    writer = csv.DictWriter(sys.stdout, reader.fieldnames)
+    writer.writeheader()
+    for item in items:
+        writer.writerow(item)
