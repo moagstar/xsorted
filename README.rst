@@ -9,7 +9,10 @@
 xsorted
 =======
 
-Like ``sorted`` but using external sorting so that large data sets can be sorted.
+Like ``sorted`` but using external sorting so that large data sets can be sorted, for example
+to sort a large csv file:
+
+.. literalinclude:: ./examples/csvsort.py
 
 Usage
 -----
