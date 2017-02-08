@@ -12,9 +12,9 @@ import os
 import sys
 import pickle
 import tempfile
-from contextlib import contextmanager
 from functools import partial
 # compat
+from contextlib2 import suppress, contextmanager
 if sys.version_info[:2] >= (3, 5):
     from heapq import merge
 else:
@@ -60,12 +60,9 @@ def _load(partition_id):
     """
     if os.path.exists(partition_id):
         try:
-            with open(partition_id, 'rb') as fileobj:
+            with suppress(EOFError), open(partition_id, 'rb') as fileobj:
                 while True:
-                    try:
-                        yield pickle.load(fileobj)
-                    except EOFError:
-                        break
+                    yield pickle.load(fileobj)
         finally:
             os.unlink(partition_id)
     else:
