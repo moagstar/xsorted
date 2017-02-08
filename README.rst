@@ -1,22 +1,34 @@
-
 .. image:: https://travis-ci.org/moagstar/xsorted.svg?branch=master
     :target: https://travis-ci.org/moagstar/xsorted
     
 .. image:: https://coveralls.io/repos/github/moagstar/xsorted/badge.svg?branch=master
     :target: https://coveralls.io/github/moagstar/xsorted?branch=master
 
+
 =======
 xsorted
 =======
 
-Like ``sorted`` but using external sorting so that large data sets can be sorted, for example
-to sort a large csv file:
+Like ``sorted`` but using external sorting so that large data sets can be sorted, for example:
 
-.. literalinclude:: ./examples/csvsort.py
+>>> from random import random
+>>> from six.moves import xrange
+>>> from xsorted import xsorted
+>>> nums = (random() for _ in xrange(pow(10, 7)))
+>>> for x in xsorted(nums): pass
 
 Usage
 -----
 
+Just like ``sorted``:
+
 >>> from xsorted import xsorted
 >>> ''.join(xsorted('qwertyuiopasdfghjklzxcvbnm'))
+'abcdefghijklmnopqrstuvwxyz'
+
+The implementation details of ``xsorted`` can be customized using the factory ``xsorter``:
+
+>>> from xsorted import xsorter
+>>> xsorted_custom = xsorter(partition_size=4)
+>>> ''.join(xsorted_custom('qwertyuiopasdfghjklzxcvbnm'))
 'abcdefghijklmnopqrstuvwxyz'
