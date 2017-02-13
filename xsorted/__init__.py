@@ -92,7 +92,7 @@ def _split(dump, partition_size, iterable, key=None, reverse=False):
     sort_by_key_and_maybe_reverse = partial(sorted, key=key, reverse=reverse)
     partitioned = partition_all(partition_size, iterable)
     dump_sorted = compose(dump, sort_by_key_and_maybe_reverse)
-    return list(map(dump_sorted, partitioned))
+    return [dump_sorted(x) for x in partitioned]
 
 
 def _merge(load, partition_ids, key=None, reverse=False):
