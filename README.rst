@@ -17,6 +17,11 @@ Like ``sorted`` but using external sorting so that large data sets can be sorted
 >>> nums = (random() for _ in xrange(pow(10, 7)))
 >>> for x in xsorted(nums): pass
 
+Installation
+------------
+
+```$ pip install xsorted```
+
 Usage
 -----
 
