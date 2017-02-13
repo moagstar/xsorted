@@ -98,13 +98,13 @@ def test_is_external():
     assert 0, 'not implemented'
 
 
-def test_split():
+@given(st.integers(min_value=1, max_value=1000), st.integers(min_value=1, max_value=1000))
+def test_split(range_size, partition_size):
     """
     Verify that the default _split correctly splits the iterable into sorted batches.
     """
     dump = Mock()
 
-    range_size, partition_size = 17, 4
     iterable = list(range(range_size))
 
     list(_split(partition_size=partition_size, dump=dump, iterable=iterable))
