@@ -21,7 +21,9 @@ def assert_property_xsorted_is_the_same_as_sorted(_xsorted, things, reverse):
     ``xsorted``, the result should be the same as when the list of things is sorted using the
     builtin ``sorted``.
 
-    :param iterable: Iterable containing the list of things to sort.
+    :param _xsorted: Xsorted function under test.
+    :param things: Iterable containing the list of things to sort.
+    :param reverse: True if things should be sorted in reverse order.
     """
     expected = list(sorted(things, reverse=reverse))
     actual = list(_xsorted(things, reverse=reverse))
