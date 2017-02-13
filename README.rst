@@ -17,6 +17,17 @@ Like ``sorted`` but using external sorting so that large data sets can be sorted
 >>> nums = (random() for _ in xrange(pow(10, 7)))
 >>> for x in xsorted(nums): pass
 
+The only restriction is that the items must be pickleable.
+
+Motivation
+----------
+
+It is sometimes necessary to sort a dataset without having to load the entire set into memory. For example, if you
+want to group a very large csv file by one of it's columns. There are several ways in which this can be achieved, a
+common solution is to use the unix command ``sort``. However unix ``sort`` does not offer the flexibility of the python
+csv module. ``xsorted`` attempts to generalize external sorting of any python iterable (the only restriction is that
+the items must be pickleable) in a similar way in which ``sorted`` generalises the sorting of any iterable.
+
 Installation
 ------------
 
