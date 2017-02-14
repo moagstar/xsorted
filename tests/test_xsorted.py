@@ -72,6 +72,37 @@ def test_property_xsorted_custom_serializer_is_the_same_as_sorted(xsorted_custom
     assert_property_xsorted_is_the_same_as_sorted(xsorted_custom_serializer_fixture, things, reverse)
 
 
+@given(st.integers(min_value=1, max_value=1000), st.integers(min_value=1, max_value=1000))
+def test_split(range_size, partition_size):
+    """
+    Verify that the default _split correctly splits the iterable into sorted batches.
+    """
+    dump = Mock()
+
+    iterable = list(range(range_size))
+
+    list(_split(partition_size=partition_size, dump=dump, iterable=iterable))
+    expected_call_count = (range_size // partition_size) + int(bool(range_size % partition_size))
+
+    assert dump.call_count == expected_call_count
+
+
+@given(
+    partition_size=st.integers(min_value=1, max_value=100),
+    num_items=st.integers(min_value=0, max_value=100),
+)
+def test_merge(partition_size, num_items):
+    """
+    Verify that _merge correctly merges batches into one sorted iterable.
+    """
+    items = range(num_items)
+    partitions = list(partition_all(partition_size, items))
+    partition_ids = range(len(partitions))
+    random.shuffle(partitions)
+    merged = _merge(lambda x: partitions[x], partition_ids)
+    assert list(merged) == list(items)
+
+
 def test_is_external():
     """
     Verify that when sorting a large iterable that not all items are loaded in memory.
@@ -117,37 +148,6 @@ def test_is_external():
     xsorted_max, sorted_max = get_xsorted_max(), get_sorted_max()
     ratio = float(sorted_max - working_set_start) / float(xsorted_max - working_set_start)
     assert ratio > 1.5
-
-
-@given(st.integers(min_value=1, max_value=1000), st.integers(min_value=1, max_value=1000))
-def test_split(range_size, partition_size):
-    """
-    Verify that the default _split correctly splits the iterable into sorted batches.
-    """
-    dump = Mock()
-
-    iterable = list(range(range_size))
-
-    list(_split(partition_size=partition_size, dump=dump, iterable=iterable))
-    expected_call_count = (range_size // partition_size) + int(bool(range_size % partition_size))
-
-    assert dump.call_count == expected_call_count
-
-
-@given(
-    partition_size=st.integers(min_value=1, max_value=100),
-    num_items=st.integers(min_value=0, max_value=100),
-)
-def test_merge(partition_size, num_items):
-    """
-    Verify that _merge correctly merges batches into one sorted iterable.
-    """
-    items = range(num_items)
-    partitions = list(partition_all(partition_size, items))
-    partition_ids = range(len(partitions))
-    random.shuffle(partitions)
-    merged = _merge(lambda x: partitions[x], partition_ids)
-    assert list(merged) == list(items)
 
 
 def test_benchmark_xsorted(benchmark, benchmark_items_fixture):
