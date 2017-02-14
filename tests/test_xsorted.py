@@ -5,7 +5,11 @@
 # std
 import os
 import random
+import threading
+# compat
+from six.moves import xrange
 # 3rd party
+import psutil
 import pytest
 from mock import Mock
 from hypothesis import given, example, strategies as st
@@ -68,36 +72,51 @@ def test_property_xsorted_custom_serializer_is_the_same_as_sorted(xsorted_custom
     assert_property_xsorted_is_the_same_as_sorted(xsorted_custom_serializer_fixture, things, reverse)
 
 
-@pytest.mark.xfail()
-def test_property_xsorted_custom_merge_is_the_same_as_sorted():
-    """
-    Verify that we can supply custom merge function.
-    """
-    assert 0, 'not implemented'
-
-
-@pytest.mark.xfail()
-def test_property_xsorted_custom_split_is_the_same_as_sorted():
-    """
-    Verify that we can supply custom split function.
-    """
-    assert 0, 'not implemented'
-
-
-@pytest.mark.xfail()
-def test_property_xsorted_combined_custom_impl_is_the_same_as_sorted():
-    """
-    Verify the combination of custom implementation details.
-    """
-    assert 0, 'not implemented'
-
-
-@pytest.mark.xfail()
 def test_is_external():
     """
     Verify that when sorting a large iterable that not all items are loaded in memory.
+
+    The basic idea is to run sorted and xsorted with a large list of random numbers. When using sorted a list is
+    materialized from the sorted iterable, when using xsorted the iterable is iterated until exhaustion. The max memory
+    used is recorded for each. We should expect the sorted memory usage to be higher than the xsorted memory usage. As
+    the size of the input data increases, so will the ratio of memory savings.
+
+    The test is performed twice, switching the order in which xsorted and sorted are performed to reduce the risk that
+    the order of execution would affect which version uses less memory.
     """
-    assert 0, 'not implemented'
+    process = psutil.Process()
+
+    def get_max_working_set(main):
+        thread = threading.Thread(target=main)
+        thread.start()
+        virtual_memory = -1
+        while thread.is_alive():
+            thread.join(0.01)
+            virtual_memory = max(virtual_memory, process.memory_info_ex().rss)
+        return virtual_memory
+
+    num_items = int(1e6)
+    items = lambda: (random.random() for _ in xrange(num_items))
+
+    def get_sorted_max():
+        def main():
+            list(sorted(items()))
+        return get_max_working_set(main)
+
+    def get_xsorted_max():
+        def main():
+            for _ in xsorted(items()): pass
+        return get_max_working_set(main)
+
+    working_set_start = process.memory_info_ex().rss
+
+    sorted_max, xsorted_max = get_sorted_max(), get_xsorted_max()
+    ratio = float(sorted_max - working_set_start) / float(xsorted_max - working_set_start)
+    assert ratio > 1.5
+
+    xsorted_max, sorted_max = get_xsorted_max(), get_sorted_max()
+    ratio = float(sorted_max - working_set_start) / float(xsorted_max - working_set_start)
+    assert ratio > 1.5
 
 
 @given(st.integers(min_value=1, max_value=1000), st.integers(min_value=1, max_value=1000))
