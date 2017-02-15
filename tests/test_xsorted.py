@@ -15,7 +15,7 @@ from mock import Mock
 from hypothesis import given, example, strategies as st
 from toolz.itertoolz import partition_all
 # local
-from xsorted import xsorted, _split, _merge, _dump, _load
+from xsorted import xsorter, xsorted, _split, _merge, _dump, _load
 from . fixtures import xsorted_custom_serializer_fixture, benchmark_items_fixture
 
 
@@ -115,6 +115,7 @@ def test_is_external():
     The test is performed twice, switching the order in which xsorted and sorted are performed to reduce the risk that
     the order of execution would affect which version uses less memory.
     """
+    _xsorted = xsorter(partition_size=10000)
     process = psutil.Process()
 
     def get_max_working_set(main):
@@ -126,7 +127,7 @@ def test_is_external():
             virtual_memory = max(virtual_memory, process.memory_info_ex().rss)
         return virtual_memory
 
-    num_items = int(1e6)
+    num_items = int(1e6) * 2
     items = lambda: (random.random() for _ in xrange(num_items))
 
     def get_sorted_max():
