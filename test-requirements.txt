@@ -9,3 +9,4 @@ hypothesis
 mock
 restview
 twine
+psutil
