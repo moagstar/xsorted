@@ -103,7 +103,6 @@ def test_merge(partition_size, num_items):
     assert list(merged) == list(items)
 
 
-@pytest.mark.skip()
 def test_is_external():
     """
     Verify that when sorting a large iterable that not all items are loaded in memory.
@@ -116,7 +115,7 @@ def test_is_external():
     The test is performed twice, switching the order in which xsorted and sorted are performed to reduce the risk that
     the order of execution would affect which version uses less memory.
     """
-    _xsorted = xsorter(partition_size=10000)
+    _xsorted = xsorter(partition_size=64)
     process = psutil.Process()
 
     def get_max_working_set(main):
@@ -124,12 +123,12 @@ def test_is_external():
         thread.start()
         virtual_memory = -1
         while thread.is_alive():
-            thread.join(0.01)
+            thread.join(0.1)
             virtual_memory = max(virtual_memory, process.memory_info_ex().rss)
         return virtual_memory
 
-    num_items = int(1e6) * 2
-    items = lambda: (random.random() for _ in xrange(num_items))
+    num_items = 8192
+    items = lambda: ([random.random()] * 8192 for _ in xrange(num_items))
 
     def get_sorted_max():
         def main():
@@ -138,7 +137,7 @@ def test_is_external():
 
     def get_xsorted_max():
         def main():
-            for _ in xsorted(items()): pass
+            for _ in _xsorted(items()): pass
         return get_max_working_set(main)
 
     working_set_start = process.memory_info_ex().rss
