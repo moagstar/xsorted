@@ -103,7 +103,8 @@ def test_merge(partition_size, num_items):
     assert list(merged) == list(items)
 
 
-@pytest.mark.skipif('TRAVIS' in os.environ, 'memory check too flaky in travis ci, probably due to limited memory')
+@pytest.mark.skipif('TRAVIS' in os.environ,
+                    reason='memory check too flaky in travis ci, probably due to limited memory')
 def test_is_external():
     """
     Verify that when sorting a large iterable that not all items are loaded in memory.
