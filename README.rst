@@ -61,13 +61,18 @@ the same interface as ``sorted`` the partition_size is treated as an implementat
 >>> ''.join(xsorted_custom('qwertyuiopasdfghjklzxcvbnm'))
 'abcdefghijklmnopqrstuvwxyz'
 
+Memory Usage
+------------
+
+![Alt text](https://cdn.rawgit.com/moagstar/xsorted/master/docs/test_profile_memory.svg)
+<img src="https://cdn.rawgit.com/moagstar/xsorted/master/docs/test_profile_memory.svg">
+
 Performance
 -----------
 
-.. raw:: html
+![Alt text](https://cdn.rawgit.com/moagstar/xsorted/250fda21/docs/hist-tests_test_xsorted.py_test_benchmark_xsorted%5B1024%5D.svg)
+<img src="https://cdn.rawgit.com/moagstar/xsorted/250fda21/docs/hist-tests_test_xsorted.py_test_benchmark_xsorted%5B1024%5D.svg">
 
-    <object data="docs/hist-tests_test_xsorted.py_test_benchmark_xsorted.svg" type="image/svg+xml"></object>
+![Alt text](https://cdn.rawgit.com/moagstar/xsorted/250fda21/docs/hist-tests_test_xsorted.py_test_benchmark_sorted.svg)
+<img src="https://cdn.rawgit.com/moagstar/xsorted/250fda21/docs/hist-tests_test_xsorted.py_test_benchmark_sorted.svg">
 
-.. raw:: html
-
-    <object data="docs/hist-tests_test_xsorted.py_test_benchmark_sorted.svg" type="image/svg+xml"></object>
