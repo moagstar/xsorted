@@ -64,15 +64,12 @@ the same interface as ``sorted`` the partition_size is treated as an implementat
 Memory Usage
 ------------
 
-![Alt text](https://cdn.rawgit.com/moagstar/xsorted/master/docs/test_profile_memory.svg)
-<img src="https://cdn.rawgit.com/moagstar/xsorted/master/docs/test_profile_memory.svg">
+.. image:: https://cdn.rawgit.com/moagstar/xsorted/master/docs/test_profile_memory.svg
 
 Performance
 -----------
 
-![Alt text](https://cdn.rawgit.com/moagstar/xsorted/250fda21/docs/hist-tests_test_xsorted.py_test_benchmark_xsorted%5B1024%5D.svg)
-<img src="https://cdn.rawgit.com/moagstar/xsorted/250fda21/docs/hist-tests_test_xsorted.py_test_benchmark_xsorted%5B1024%5D.svg">
+.. image:: https://cdn.rawgit.com/moagstar/xsorted/250fda21/docs/hist-tests_test_xsorted.py_test_benchmark_xsorted%5B1024%5D.svg
 
-![Alt text](https://cdn.rawgit.com/moagstar/xsorted/250fda21/docs/hist-tests_test_xsorted.py_test_benchmark_sorted.svg)
-<img src="https://cdn.rawgit.com/moagstar/xsorted/250fda21/docs/hist-tests_test_xsorted.py_test_benchmark_sorted.svg">
+.. image:: https://cdn.rawgit.com/moagstar/xsorted/250fda21/docs/hist-tests_test_xsorted.py_test_benchmark_sorted.svg
 
