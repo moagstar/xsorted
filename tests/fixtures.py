@@ -1,10 +1,10 @@
 # std
 import uuid
-import random
 # 3rd party
 import pytest
 # local
 from xsorted import xsorter
+from . util import random_strings
 
 
 class CustomSerializer:
@@ -37,7 +37,4 @@ def benchmark_items_fixture():
     """
     Fixture for creating a list of items for sorting which can be used for benchmarking.
     """
-    items = list(range(pow(10, 6)))
-    random.seed(0)
-    random.shuffle(items)
-    return items
+    return random_strings(length=1000, num=int(1e5 / 2))

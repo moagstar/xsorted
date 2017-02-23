@@ -10,29 +10,29 @@
         "system": "Linux"
     },
     "commit_info": {
-        "id": "09aac307ed87b028f3c5c24e49d5bb31f102338b",
+        "id": "89c0962e172a5ddd7504d4d95fcd61a02764ca9f",
         "dirty": true
     },
     "benchmarks": [
         {
             "group": null,
-            "name": "test_benchmark_xsorted",
-            "fullname": "tests/test_xsorted.py::test_benchmark_xsorted",
+            "name": "test_benchmark_xsorted[1024]",
+            "fullname": "tests/test_xsorted.py::test_benchmark_xsorted[1024]",
             "stats": {
-                "min": 1.2337314649994369,
-                "max": 1.242476245999569,
-                "mean": 1.2393257179999637,
-                "stddev": 0.003690112239653995,
+                "min": 3.1146999390330166e-05,
+                "max": 5.924500146647915e-05,
+                "mean": 3.8010200660210104e-05,
+                "stddev": 1.1988221673407645e-05,
                 "rounds": 5,
-                "median": 1.2408314540007268,
-                "iqr": 0.0056295150002370065,
-                "q1": 1.2365572407497893,
-                "q3": 1.2421867557500264,
-                "iqr_outliers": 0,
+                "median": 3.254500188631937e-05,
+                "iqr": 9.894003596855327e-06,
+                "q1": 3.1519748517894186e-05,
+                "q3": 4.1413752114749514e-05,
+                "iqr_outliers": 1,
                 "stddev_outliers": 1,
-                "outliers": "1;0",
-                "ld15iqr": 1.2337314649994369,
-                "hd15iqr": 1.242476245999569,
+                "outliers": "1;1",
+                "ld15iqr": 3.1146999390330166e-05,
+                "hd15iqr": 5.924500146647915e-05,
                 "iterations": 1
             },
             "options": {
@@ -49,20 +49,20 @@
             "name": "test_benchmark_sorted",
             "fullname": "tests/test_xsorted.py::test_benchmark_sorted",
             "stats": {
-                "min": 0.6563541530013026,
-                "max": 0.6617548790000001,
-                "mean": 0.6583351618006418,
-                "stddev": 0.0021200759051145934,
+                "min": 7.139969966374338e-07,
+                "max": 6.488000508397818e-06,
+                "mean": 1.9707978935912253e-06,
+                "stddev": 2.5301487805249737e-06,
                 "rounds": 5,
-                "median": 0.657369529000789,
-                "iqr": 0.002566790999026125,
-                "q1": 0.6570542015010687,
-                "q3": 0.6596209925000949,
-                "iqr_outliers": 0,
+                "median": 8.019997039809823e-07,
+                "iqr": 1.7210040823556483e-06,
+                "q1": 7.334947440540418e-07,
+                "q3": 2.45449882640969e-06,
+                "iqr_outliers": 1,
                 "stddev_outliers": 1,
-                "outliers": "1;0",
-                "ld15iqr": 0.6563541530013026,
-                "hd15iqr": 0.6617548790000001,
+                "outliers": "1;1",
+                "ld15iqr": 7.139969966374338e-07,
+                "hd15iqr": 6.488000508397818e-06,
                 "iterations": 1
             },
             "options": {
@@ -75,6 +75,6 @@
             }
         }
     ],
-    "datetime": "2017-02-15T19:43:52.808516",
+    "datetime": "2017-02-23T20:05:06.256790",
     "version": "3.0.0"
 }

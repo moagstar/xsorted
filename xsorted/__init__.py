@@ -152,7 +152,7 @@ def _xsorted(partition_size, dump, load, split, merge, iterable, key=None, rever
     return merge(load, partition_ids, key, reverse)
 
 
-def xsorter(partition_size=8192, dump=_dump, load=_load, split=_split, merge=_merge):
+def xsorter(partition_size=1024, dump=_dump, load=_load, split=_split, merge=_merge):
     """
     Generate an xsorted function using the specified partition size, serializer factory, splitter
     and merger.

@@ -60,3 +60,14 @@ the same interface as ``sorted`` the partition_size is treated as an implementat
 >>> xsorted_custom = xsorter(partition_size=4)
 >>> ''.join(xsorted_custom('qwertyuiopasdfghjklzxcvbnm'))
 'abcdefghijklmnopqrstuvwxyz'
+
+Performance
+-----------
+
+.. raw:: html
+
+    <object data="docs/hist-tests_test_xsorted.py_test_benchmark_xsorted.svg" type="image/svg+xml"></object>
+
+.. raw:: html
+
+    <object data="docs/hist-tests_test_xsorted.py_test_benchmark_sorted.svg" type="image/svg+xml"></object>
