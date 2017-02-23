@@ -69,7 +69,13 @@ Memory Usage
 Performance
 -----------
 
+xsorted
+~~~~~~~
+
 .. image:: https://cdn.rawgit.com/moagstar/xsorted/250fda21/docs/hist-tests_test_xsorted.py_test_benchmark_xsorted%5B1024%5D.svg
+
+sorted
+~~~~~~
 
 .. image:: https://cdn.rawgit.com/moagstar/xsorted/250fda21/docs/hist-tests_test_xsorted.py_test_benchmark_sorted.svg
 
