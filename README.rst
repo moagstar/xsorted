@@ -77,5 +77,4 @@ xsorted
 sorted
 ~~~~~~
 
-.. image:: https://cdn.rawgit.com/moagstar/xsorted/250fda21/docs/hist-tests_test_xsorted.py_test_benchmark_sorted.svg
-
+.. image:: https://cdn.rawgit.com/moagstar/xsorted/a21804fa/docs/hist-tests_test_xsorted.py_test_benchmark_sorted.svg
