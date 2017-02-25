@@ -1,0 +1,170 @@
+{
+    "machine_info": {
+        "node": "moagstar",
+        "processor": "x86_64",
+        "machine": "x86_64",
+        "python_compiler": "GCC 5.4.0 20160609",
+        "python_implementation": "CPython",
+        "python_version": "3.6.0",
+        "release": "4.4.0-53-generic",
+        "system": "Linux"
+    },
+    "commit_info": {
+        "id": "268c7ecb3a474d279c9f47cf05b661af3b05d7bd",
+        "dirty": true
+    },
+    "benchmarks": [
+        {
+            "group": null,
+            "name": "test_benchmark_xsorted[1024]",
+            "fullname": "tests/test_xsorted.py::test_benchmark_xsorted[1024]",
+            "stats": {
+                "min": 3.1944000511430204e-05,
+                "max": 6.278200089582242e-05,
+                "mean": 3.941020004276652e-05,
+                "stddev": 1.317990627521517e-05,
+                "rounds": 5,
+                "median": 3.362099960213527e-05,
+                "iqr": 1.0741000096459175e-05,
+                "q1": 3.223424982934375e-05,
+                "q3": 4.297524992580293e-05,
+                "iqr_outliers": 1,
+                "stddev_outliers": 1,
+                "outliers": "1;1",
+                "ld15iqr": 3.1944000511430204e-05,
+                "hd15iqr": 6.278200089582242e-05,
+                "iterations": 1
+            },
+            "options": {
+                "disable_gc": false,
+                "timer": "perf_counter",
+                "min_rounds": 5,
+                "max_time": 1.0,
+                "min_time": 5e-06,
+                "warmup": false
+            }
+        },
+        {
+            "group": null,
+            "name": "test_benchmark_xsorted[2048]",
+            "fullname": "tests/test_xsorted.py::test_benchmark_xsorted[2048]",
+            "stats": {
+                "min": 5.8248000641469844e-05,
+                "max": 8.764599988353439e-05,
+                "mean": 6.509580052806995e-05,
+                "stddev": 1.2732194668746685e-05,
+                "rounds": 5,
+                "median": 5.861400131834671e-05,
+                "iqr": 1.0443250175740104e-05,
+                "q1": 5.8379250276630046e-05,
+                "q3": 6.882250045237015e-05,
+                "iqr_outliers": 1,
+                "stddev_outliers": 1,
+                "outliers": "1;1",
+                "ld15iqr": 5.8248000641469844e-05,
+                "hd15iqr": 8.764599988353439e-05,
+                "iterations": 1
+            },
+            "options": {
+                "disable_gc": false,
+                "timer": "perf_counter",
+                "min_rounds": 5,
+                "max_time": 1.0,
+                "min_time": 5e-06,
+                "warmup": false
+            }
+        },
+        {
+            "group": null,
+            "name": "test_benchmark_xsorted[4096]",
+            "fullname": "tests/test_xsorted.py::test_benchmark_xsorted[4096]",
+            "stats": {
+                "min": 0.00011261799954809248,
+                "max": 0.00014095000005909242,
+                "mean": 0.00011943739991693292,
+                "stddev": 1.2079613310340354e-05,
+                "rounds": 5,
+                "median": 0.00011431799975980539,
+                "iqr": 8.703752428118605e-06,
+                "q1": 0.00011333199881846667,
+                "q3": 0.00012203575124658528,
+                "iqr_outliers": 1,
+                "stddev_outliers": 1,
+                "outliers": "1;1",
+                "ld15iqr": 0.00011261799954809248,
+                "hd15iqr": 0.00014095000005909242,
+                "iterations": 1
+            },
+            "options": {
+                "disable_gc": false,
+                "timer": "perf_counter",
+                "min_rounds": 5,
+                "max_time": 1.0,
+                "min_time": 5e-06,
+                "warmup": false
+            }
+        },
+        {
+            "group": null,
+            "name": "test_benchmark_xsorted[8192]",
+            "fullname": "tests/test_xsorted.py::test_benchmark_xsorted[8192]",
+            "stats": {
+                "min": 0.00020592100008798297,
+                "max": 0.0002716979997785529,
+                "mean": 0.000222338600360672,
+                "stddev": 2.804530361071359e-05,
+                "rounds": 5,
+                "median": 0.00020901400057482533,
+                "iqr": 2.5337750685139326e-05,
+                "q1": 0.00020643100015149685,
+                "q3": 0.00023176875083663617,
+                "iqr_outliers": 1,
+                "stddev_outliers": 1,
+                "outliers": "1;1",
+                "ld15iqr": 0.00020592100008798297,
+                "hd15iqr": 0.0002716979997785529,
+                "iterations": 1
+            },
+            "options": {
+                "disable_gc": false,
+                "timer": "perf_counter",
+                "min_rounds": 5,
+                "max_time": 1.0,
+                "min_time": 5e-06,
+                "warmup": false
+            }
+        },
+        {
+            "group": null,
+            "name": "test_benchmark_sorted",
+            "fullname": "tests/test_xsorted.py::test_benchmark_sorted",
+            "stats": {
+                "min": 7.159997039707378e-07,
+                "max": 6.1110004025977105e-06,
+                "mean": 1.8896000256063416e-06,
+                "stddev": 2.368214784983869e-06,
+                "rounds": 5,
+                "median": 7.220005500130355e-07,
+                "iqr": 1.693000285740709e-06,
+                "q1": 7.189996722445358e-07,
+                "q3": 2.4119999579852447e-06,
+                "iqr_outliers": 1,
+                "stddev_outliers": 1,
+                "outliers": "1;1",
+                "ld15iqr": 7.159997039707378e-07,
+                "hd15iqr": 6.1110004025977105e-06,
+                "iterations": 1
+            },
+            "options": {
+                "disable_gc": false,
+                "timer": "perf_counter",
+                "min_rounds": 5,
+                "max_time": 1.0,
+                "min_time": 5e-06,
+                "warmup": false
+            }
+        }
+    ],
+    "datetime": "2017-02-25T13:38:06.371659",
+    "version": "3.0.0"
+}

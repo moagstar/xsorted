@@ -198,9 +198,9 @@ def test_profile_memory():
         strings = random_strings(length=strings_length, num=num_strings)
         thread = threading.Thread(target=do_benchmark, args=(strings, function_under_test))
 
+        start = process.memory_info_ex().rss
         thread.start()
         start_time = time.clock()
-        start = process.memory_info_ex().rss
 
         while thread.is_alive():
             thread.join(0.001)
@@ -221,9 +221,9 @@ def test_profile_memory():
 
 @pytest.mark.parametrize('partition_size', [
     1024,
-    # 2048,
-    # 4096,
-    # 8192,
+    2048,
+    4096,
+    8192,
 ])
 def test_benchmark_xsorted(partition_size, benchmark, benchmark_items_fixture):
     """
