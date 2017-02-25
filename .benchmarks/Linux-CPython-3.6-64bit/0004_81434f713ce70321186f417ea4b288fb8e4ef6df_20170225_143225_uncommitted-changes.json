@@ -1,0 +1,80 @@
+{
+    "machine_info": {
+        "node": "moagstar",
+        "processor": "x86_64",
+        "machine": "x86_64",
+        "python_compiler": "GCC 5.4.0 20160609",
+        "python_implementation": "CPython",
+        "python_version": "3.6.0",
+        "release": "4.4.0-53-generic",
+        "system": "Linux"
+    },
+    "commit_info": {
+        "id": "81434f713ce70321186f417ea4b288fb8e4ef6df",
+        "dirty": true
+    },
+    "benchmarks": [
+        {
+            "group": null,
+            "name": "test_benchmark_xsorted[1024]",
+            "fullname": "tests/test_xsorted.py::test_benchmark_xsorted[1024]",
+            "stats": {
+                "min": 3.0961999073042534e-05,
+                "max": 6.0464000853244215e-05,
+                "mean": 4.0517199522582814e-05,
+                "stddev": 1.2275232393177791e-05,
+                "rounds": 5,
+                "median": 3.4282000342500396e-05,
+                "iqr": 1.5994500699889613e-05,
+                "q1": 3.2260248644888634e-05,
+                "q3": 4.825474934477825e-05,
+                "iqr_outliers": 0,
+                "stddev_outliers": 1,
+                "outliers": "1;0",
+                "ld15iqr": 3.0961999073042534e-05,
+                "hd15iqr": 6.0464000853244215e-05,
+                "iterations": 1
+            },
+            "options": {
+                "disable_gc": false,
+                "timer": "perf_counter",
+                "min_rounds": 5,
+                "max_time": 1.0,
+                "min_time": 5e-06,
+                "warmup": false
+            }
+        },
+        {
+            "group": null,
+            "name": "test_benchmark_sorted",
+            "fullname": "tests/test_xsorted.py::test_benchmark_sorted",
+            "stats": {
+                "min": 7.599992386531085e-07,
+                "max": 5.841000529471785e-06,
+                "mean": 1.854000220191665e-06,
+                "stddev": 2.233052029609434e-06,
+                "rounds": 5,
+                "median": 7.899998308857903e-07,
+                "iqr": 1.503500243416056e-06,
+                "q1": 7.780004125379492e-07,
+                "q3": 2.281500655954005e-06,
+                "iqr_outliers": 1,
+                "stddev_outliers": 1,
+                "outliers": "1;1",
+                "ld15iqr": 7.599992386531085e-07,
+                "hd15iqr": 5.841000529471785e-06,
+                "iterations": 1
+            },
+            "options": {
+                "disable_gc": false,
+                "timer": "perf_counter",
+                "min_rounds": 5,
+                "max_time": 1.0,
+                "min_time": 5e-06,
+                "warmup": false
+            }
+        }
+    ],
+    "datetime": "2017-02-25T13:32:31.292631",
+    "version": "3.0.0"
+}

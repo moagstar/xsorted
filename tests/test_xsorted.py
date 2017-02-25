@@ -15,7 +15,7 @@ import psutil
 import pytest
 from mock import Mock
 from hypothesis import given, example, strategies as st
-from toolz.itertoolz import partition_all
+from toolz.itertoolz import partition_all, sliding_window
 # local
 from xsorted import xsorter, xsorted, _split, _merge, _dump, _load
 from . fixtures import xsorted_custom_serializer_fixture, benchmark_items_fixture
@@ -24,7 +24,7 @@ from . util import random_strings
 
 def assert_property_xsorted_is_the_same_as_sorted(_xsorted, things, reverse):
     """
-    Verify the property that given a list of things, when the list of things is sorted using
+    Assert the property that given a list of things, when the list of things is sorted using
     ``xsorted``, the result should be the same as when the list of things is sorted using the
     builtin ``sorted``.
 
@@ -37,13 +37,47 @@ def assert_property_xsorted_is_the_same_as_sorted(_xsorted, things, reverse):
     assert actual == expected
 
 
-@given(things=st.lists(st.integers(min_value=-2147483648, max_value=4294967295)), reverse=st.booleans())
-@example(things=[0, 0], reverse=True)
-def test_property_xsorted_is_the_same_as_sorted(things, reverse):
+def assert_property_xsorted_produces_ordered_iterable(_xsorted, things, reverse):
+    """
+    Assert the property that xsorted should produce an ordered iterable.
+    """
+    actual = list(_xsorted(things, reverse=reverse))
+    actual = reversed(actual) if reverse else actual
+    assert all(a <= b for a, b in sliding_window(2, actual))
+
+
+@given(things=st.lists(st.integers()), reverse=st.booleans())
+def test_properties_xsorted(things, reverse):
     """
     Verify the property that xsorted == sorted.
     """
     assert_property_xsorted_is_the_same_as_sorted(xsorted, things, reverse)
+
+
+@given(things=st.lists(st.integers()), reverse=st.booleans())
+def test_property_xsorted_produces_ordered_iterable(things, reverse):
+    """
+    Verify the property that xsorted should produce an ordered iterable.
+    """
+    assert_property_xsorted_produces_ordered_iterable(xsorted, things, reverse)
+
+
+@given(things=st.lists(st.integers()), reverse=st.booleans())
+def test_property_xsorted_custom_serializer_is_the_same_as_sorted(xsorted_custom_serializer_fixture,
+                                                                  things, reverse):
+    """
+    Verify that we can supply custom serialization dump and load.
+    """
+    assert_property_xsorted_is_the_same_as_sorted(xsorted_custom_serializer_fixture, things, reverse)
+
+
+@given(things=st.lists(st.integers()), reverse=st.booleans())
+def test_property_xsorted_custom_serializer_produces_ordered_iterable(xsorted_custom_serializer_fixture,
+                                                                      things, reverse):
+    """
+    Verify that we can supply custom serialization dump and load.
+    """
+    assert_property_xsorted_produces_ordered_iterable(xsorted_custom_serializer_fixture, things, reverse)
 
 
 @given(lists_of_things=st.lists(st.lists(st.integers())))
@@ -64,15 +98,6 @@ def test_default_serializer_cleanup():
     assert os.path.exists(path)
     list(_load(path))
     assert not os.path.exists(path)
-
-
-@given(things=st.lists(st.integers()), reverse=st.booleans())
-def test_property_xsorted_custom_serializer_is_the_same_as_sorted(xsorted_custom_serializer_fixture,
-                                                                  things, reverse):
-    """
-    Verify that we can supply custom serialization dump and load.
-    """
-    assert_property_xsorted_is_the_same_as_sorted(xsorted_custom_serializer_fixture, things, reverse)
 
 
 @given(st.integers(min_value=1, max_value=1000), st.integers(min_value=1, max_value=1000))
