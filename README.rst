@@ -69,7 +69,7 @@ memory usage when sorting an iterable with ``sorted`` is roughly equivalent to t
 while with ``xsorted`` the memory usage will be proportional to the number of partitions required to perform the
 external sort.
 
-.. image:: https://cdn.rawgit.com/moagstar/xsorted/master/docs/test_profile_memory.svg
+.. image:: https://rawgit.com/moagstar/xsorted/master/docs/test_profile_memory.svg
 
 It should be noted that we cannot read too much into the time difference in this chart. The memory profile test is
 performed by running the sorting algorithm in a separate thread, sampling the memory usage in the main thread. Sampling
@@ -88,8 +88,8 @@ Again 50000 1KB strings are sorted, benchmarked using `pytest-benchmark
 
 **xsorted**
 
-.. image:: https://cdn.rawgit.com/moagstar/xsorted/250fda21/docs/hist-tests_test_xsorted.py_test_benchmark_xsorted%5B1024%5D.svg
+.. image:: https://rawgit.com/moagstar/xsorted/master/docs/hist-tests_test_xsorted.py_test_benchmark_xsorted%5B1024%5D.svg
 
 **sorted**
 
-.. image:: https://cdn.rawgit.com/moagstar/xsorted/a21804fa/docs/hist-tests_test_xsorted.py_test_benchmark_sorted.svg
+.. image:: https://rawgit.com/moagstar/xsorted/master/docs/hist-tests_test_xsorted.py_test_benchmark_sorted.svg
