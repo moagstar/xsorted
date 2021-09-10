@@ -9,12 +9,11 @@
 xsorted
 =======
 
-Like ``sorted`` but using external sorting so that large data sets can be sorted, for example:
+Like ``sorted`` but using external sorting (the x stands for eXternal) so that large data sets can be sorted, for example:
 
 >>> from random import random
->>> from six.moves import xrange
 >>> from xsorted import xsorted
->>> for x in xsorted(random() for _ in xrange(int(1e7))): pass
+>>> for x in xsorted(random() for _ in range(int(1e7))): pass
 
 The only restriction is that the items must be pickleable (or you can provide your own serializer for externalizing
 partitions of items).
